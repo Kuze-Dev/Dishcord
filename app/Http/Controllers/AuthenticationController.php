@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\UserInformation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Spatie\RouteAttributes\Attributes\Post;
 use Spatie\RouteAttributes\Attributes\Prefix;
@@ -25,6 +28,7 @@ class AuthenticationController extends Controller
             'password' => 'required|min:6|confirmed',
             'address' => 'required',
             'phone_number' => 'required',
+            'bio' => 'nullable',
         ]);
 
         if ($validator->fails()) {
@@ -33,6 +37,21 @@ class AuthenticationController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
+
+        $user = User::create([
+            'name' => $request->firstname . ' ' . $request->lastname,
+            'email' => $request->email,
+            'password' => Hash::make($request->password)
+        ]);
+
+        UserInformation::create([
+            'user_id' => $user->id,
+            'first_name' => $request->firstname,
+            'last_name' => $request->lastname,
+            'address' => $request->address,
+            'phone_number' => $request->phone_number,
+            'bio' => $request->bio,
+        ]);
 
         return response()->json([
             'success' => true,
@@ -68,7 +87,7 @@ class AuthenticationController extends Controller
 
         $user = Auth::user();
 
-        $token = $user->createToken('API_TOKEN')->plainTextToken;
+        $token = $user->createToken('USER_TOKEN')->plainTextToken;
 
         return response()->json([
             'success' => true,
