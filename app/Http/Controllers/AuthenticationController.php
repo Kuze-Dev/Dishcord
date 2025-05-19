@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Spatie\RouteAttributes\Attributes\Post;
+use Spatie\RouteAttributes\Attributes\Prefix;
+use Spatie\RouteAttributes\Attributes\Middleware;
 
+#[Prefix('api')]
 class AuthenticationController extends Controller
 {
 
-    #[
-        Post('api/register')
+    #[ 
+        Post('register')
     ]
     public function register(Request $request)
     {
@@ -39,7 +42,7 @@ class AuthenticationController extends Controller
     }
 
     #[
-        Post('api/login')
+        Post('login')
     ]
     public function login (Request $request)
     {
