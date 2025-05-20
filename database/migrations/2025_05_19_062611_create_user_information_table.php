@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('phone_number');
             $table->string('bio')->nullable();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
         });
     }
 

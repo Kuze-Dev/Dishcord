@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserInformation;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -17,19 +18,27 @@ class UserController extends Controller
     public function profile() :JsonResponse
     {
         $user = Auth::user();
+        $userInfo = UserInformation::class::where('user_id', $user->id)->get();
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
-        return response()->json($user);
+        return response()->json([
+            'status' => true,
+            'message' => 'Fetched Sucessfullu',
+            'data' => [
+                'user' => $user,
+                'userInfo' => $userInfo
+            ]
+        ]);
     }
 
     #[Get('users')]
-    public function getAllUser() :JsonResponse
+    public function userPosts()
     {
-        $user = User::all();
-        return response()->json($user);
+        $users = User::all();
+        return response()->json($users);
     }
 
 }
