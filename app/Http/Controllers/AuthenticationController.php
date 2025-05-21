@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Models\UserInformation;
 use Illuminate\Http\Request;
+use App\Models\UserInformation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Spatie\RouteAttributes\Attributes\Get;
 use Spatie\RouteAttributes\Attributes\Post;
 use Spatie\RouteAttributes\Attributes\Prefix;
 use Spatie\RouteAttributes\Attributes\Middleware;
@@ -95,5 +96,29 @@ class AuthenticationController extends Controller
             'token' => $token,
             'user' => $user
         ], 200);
+    }
+
+
+    #[ 
+        Get('logout', middleware: 'auth:sanctum')
+    ]
+    public function logout()
+    {
+
+        if (Auth::check()) {
+            auth()->user()->tokens()->delete();
+
+            Auth::logout();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User Logged Out Successfully'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User Not Found'
+        ]);
     }
 }
