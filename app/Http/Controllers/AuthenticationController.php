@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Validator;
 use Spatie\RouteAttributes\Attributes\Get;
 use Spatie\RouteAttributes\Attributes\Post;
 use Spatie\RouteAttributes\Attributes\Prefix;
-use Spatie\RouteAttributes\Attributes\Middleware;
 
 #[Prefix('api')]
 class AuthenticationController extends Controller
@@ -45,7 +44,7 @@ class AuthenticationController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        UserInformation::create([
+        $user->UserInformation()->create([
             'user_id' => $user->id,
             'first_name' => $request->firstname,
             'last_name' => $request->lastname,
