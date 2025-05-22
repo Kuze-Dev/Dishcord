@@ -12,7 +12,7 @@ use Spatie\RouteAttributes\Attributes\Prefix;
 use Spatie\RouteAttributes\Attributes\Middleware;
 
 #[Prefix('api/post')]
-#[Middleware('auth:sanctum')]
+// #[Middleware('auth:sanctum')]
 class PostController extends Controller
 {
     //
@@ -57,12 +57,11 @@ class PostController extends Controller
     ]
     public function getPosts()
     {
-        // Fetch posts logic here
        $post = UserPost::all();
 
         return response()->json([
             'success' => true,
-            $post // Replace with actual posts
+            $post 
         ]);
     }
 
