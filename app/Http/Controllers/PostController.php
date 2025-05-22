@@ -12,7 +12,7 @@ use Spatie\RouteAttributes\Attributes\Prefix;
 use Spatie\RouteAttributes\Attributes\Middleware;
 
 #[Prefix('api/post')]
-// #[Middleware('auth:sanctum')]
+#[Middleware('auth:sanctum')]
 class PostController extends Controller
 {
     //
