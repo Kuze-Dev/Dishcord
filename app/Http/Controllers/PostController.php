@@ -19,7 +19,7 @@ class PostController extends Controller
 {
     //
     #[
-        Post('create')
+        Post('post')
     ]
 
     public function create(Request $request)
@@ -55,21 +55,20 @@ class PostController extends Controller
     }
 
     #[
-        Get('read')
+        Get('post')
     ]
     public function getPosts()
     {
-        // Fetch posts logic here
        $post = UserPost::all();
 
         return response()->json([
             'success' => true,
-             'data' => $post // Replace with actual posts
+             'data' => $post
         ]);
     }
 
     #[
-        Put('update/{id}')
+        Put('post/{id}')
     ]
     public function updatePost(Request $request, $id)
     {
@@ -106,7 +105,7 @@ class PostController extends Controller
     }
 
     #[
-        Delete('delete/{id}')
+        Delete('post/{id}')
     ]
 
     public function deletePost($id)
