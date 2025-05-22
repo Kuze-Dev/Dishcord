@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Spatie\RouteAttributes\Attributes\Get;
+use Spatie\RouteAttributes\Attributes\Put;
 use Spatie\RouteAttributes\Attributes\Post;
+use Spatie\RouteAttributes\Attributes\Delete;
 use Spatie\RouteAttributes\Attributes\Prefix;
 use Spatie\RouteAttributes\Attributes\Middleware;
 
-#[Prefix('api/post')]
+#[Prefix('api')]
 #[Middleware('auth:sanctum')]
 class PostController extends Controller
 {
@@ -62,9 +64,70 @@ class PostController extends Controller
 
         return response()->json([
             'success' => true,
-            $post // Replace with actual posts
+             'data' => $post // Replace with actual posts
         ]);
     }
+
+    #[
+        Put('update/{id}')
+    ]
+    public function updatePost(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(),[
+
+            'title' => 'required',
+            'body' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
+
+        $user = Auth::user();
+        $post = $user->userPosts()->find($id);
+
+        $user->userPosts()->update([
+            'title' => $request->title,
+            'body' => $request->body,
+            'image' => $request->image,
+        ]);
+
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Post Updated Succcessfully',
+            'post' => $post
+        ]);
+
+    }
+
+    #[
+        Delete('delete/{id}')
+    ]
+
+    public function deletePost($id)
+{
+    $user = Auth::user();
+    $post = $user->userPosts()->find($id);
+
+    if (!$post) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Post not found'
+        ], 404);
+    }
+
+    $post->delete();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Post deleted successfully'
+    ]);
+}
 
 
 }
