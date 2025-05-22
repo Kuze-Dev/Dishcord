@@ -36,7 +36,7 @@ class UserController extends Controller
             ]
         ]);
     }
-    #[Put('edit-profile', middleware: 'auth:sanctum')]
+    #[Put('profile', middleware: 'auth:sanctum')]
     public function editProfile(Request $request)
     {
         $validator = Validator::make($request->all(), [

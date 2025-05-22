@@ -59,3 +59,15 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+
+
+## Generate domain pattern using this command 
+
+php artisan make:domain-model Ingridients --domain=Ingridients
+
+it creade a Igridients model insidel Domain/Ingridients/Models/Ingridients.php
+
+if you want to create migration along with the command just put --migration
+if you want to create DataTransferObjects just put --dto
+if you want also to create action just put --action
