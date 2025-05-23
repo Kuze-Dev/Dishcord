@@ -13,6 +13,7 @@ use Spatie\RouteAttributes\Attributes\Delete;
 use Spatie\RouteAttributes\Attributes\Prefix;
 use Spatie\RouteAttributes\Attributes\Middleware;
 
+
 #[Prefix('api')]
 #[Middleware('auth:sanctum')]
 class PostController extends Controller
