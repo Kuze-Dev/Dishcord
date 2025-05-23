@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('ingridients', function (Blueprint $table) {
             $table->id();
-            $table->string('ingridient_name');
-            $table->string('ingridient_type');
-            $table->string('ingridient_quantity');
-            $table->string('ingridient_unit');
+            $table->string('name');
+            $table->string('type');
+            $table->string('quantity');
+            $table->string('unit');
             $table->foreignId('recipe_id')->constrained('recipes')->onDelete('cascade');
             $table->timestamps();
         });

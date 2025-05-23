@@ -110,24 +110,22 @@ class PostController extends Controller
     ]
 
     public function deletePost($id)
-{
-    $user = Auth::user();
-    $post = $user->userPosts()->find($id);
+    {
+        $user = Auth::user();
+        $post = $user->userPosts()->find($id);
 
-    if (!$post) {
+        if (!$post) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
+
+        $post->delete();
+
         return response()->json([
-            'success' => false,
-            'message' => 'Post not found'
-        ], 404);
+            'success' => true,
+            'message' => 'Post deleted successfully'
+        ]);
     }
-
-    $post->delete();
-
-    return response()->json([
-        'success' => true,
-        'message' => 'Post deleted successfully'
-    ]);
-}
-
-
 }

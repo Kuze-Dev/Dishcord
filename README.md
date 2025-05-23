@@ -71,3 +71,17 @@ it creade a Igridients model insidel Domain/Ingridients/Models/Ingridients.php
 if you want to create migration along with the command just put --migration
 if you want to create DataTransferObjects just put --dto
 if you want also to create action just put --action
+
+## Create domain Action 
+
+php artisan make:domain-action --model=Ingridients --domain=Ingridients --action=create
+php artisan make:domain-action --model=Ingridients --domain=Ingridients --action=update
+php artisan make:domain-action --model=Ingridients --domain=Ingridients --action=delete
+php artisan make:domain-action --model=Ingridients --domain=Ingridients --action=all 
+
+--action=all create all type of action
+
+## Create domain-addon 
+Create a dto or action in a existed model or domain just run 
+
+php artisan make:domain-addon --model=Ingridients --domain=Ingridients --dto --action
