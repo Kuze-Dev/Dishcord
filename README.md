@@ -75,8 +75,11 @@ if you want also to create action just put --action
 ## Create domain Action 
 
 php artisan make:domain-action --model=Ingridients --domain=Ingridients --action=create
+
 php artisan make:domain-action --model=Ingridients --domain=Ingridients --action=update
+
 php artisan make:domain-action --model=Ingridients --domain=Ingridients --action=delete
+
 php artisan make:domain-action --model=Ingridients --domain=Ingridients --action=all 
 
 --action=all create all type of action
