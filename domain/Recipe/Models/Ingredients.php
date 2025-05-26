@@ -5,9 +5,9 @@ namespace Domain\Recipe\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Ingridients extends Model
+class Ingredients extends Model
 {
-    protected $table = 'ingridients';
+    protected $table = 'ingredients';
 
     protected $fillable = [
         'name',
