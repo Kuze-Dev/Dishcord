@@ -21,10 +21,11 @@ class MakeDomainAddon extends Command
             return static::FAILURE;
         }
 
-        // Create DTO
+        // -- DTO Creation --
         if ($this->option('dto')) {
+            $dtoName = Str::studly($this->option('dto-name') ?? "{$modelName}DTO");
             $dtoPath = base_path("domain/{$domain}/DataTransferObjects");
-            $dtoFile = "{$dtoPath}/{$modelName}DTO.php";
+            $dtoFile = "{$dtoPath}/{$dtoName}.php";
             $dtoNamespace = "Domain\\{$domain}\\DataTransferObjects";
 
             if (!File::isDirectory($dtoPath)) {
@@ -36,7 +37,7 @@ class MakeDomainAddon extends Command
 
 namespace {$dtoNamespace};
 
-class {$modelName}DTO
+class {$dtoName}
 {
     public function __construct(
         // Add your typed properties here
@@ -48,27 +49,31 @@ PHP;
             $this->info("✅ DTO created at: {$dtoFile}");
         }
 
-        // Create Action
+        // -- Action Creation --
         if ($this->option('action')) {
+            $defaultActionName = "Create{$modelName}";
+            $actionName = Str::studly($this->option('action-name') ?? $defaultActionName);
             $actionPath = base_path("domain/{$domain}/Actions");
-            $actionFile = "{$actionPath}/Create{$modelName}.php";
+            $actionFile = "{$actionPath}/{$actionName}.php";
             $actionNamespace = "Domain\\{$domain}\\Actions";
 
             if (!File::isDirectory($actionPath)) {
                 File::makeDirectory($actionPath, 0755, true);
             }
 
+            $dtoName = Str::studly($this->option('dto-name') ?? "{$modelName}DTO");
+
             $actionContent = <<<PHP
 <?php
 
 namespace {$actionNamespace};
 
-use Domain\\{$domain}\\DataTransferObjects\\{$modelName}DTO;
+use Domain\\{$domain}\\DataTransferObjects\\{$dtoName};
 use Domain\\{$domain}\\Models\\{$modelName};
 
-class Create{$modelName}
+class {$actionName}
 {
-    public function handle({$modelName}DTO \$dto): {$modelName}
+    public function handle({$dtoName} \$dto): {$modelName}
     {
         return {$modelName}::create([
             // Map DTO properties here, e.g. 'name' => \$dto->name,
@@ -88,8 +93,10 @@ PHP;
     {
         $this
             ->addOption('model', null, InputOption::VALUE_REQUIRED, 'The model name')
-            ->addOption('domain', null, InputOption::VALUE_REQUIRED, 'The domain name (e.g., Ingridients)')
+            ->addOption('domain', null, InputOption::VALUE_REQUIRED, 'The domain name (e.g., Ingredients)')
             ->addOption('dto', null, InputOption::VALUE_NONE, 'Create DTO')
-            ->addOption('action', null, InputOption::VALUE_NONE, 'Create Action');
+            ->addOption('dto-name', null, InputOption::VALUE_OPTIONAL, 'Custom DTO class name')
+            ->addOption('action', null, InputOption::VALUE_NONE, 'Create Action')
+            ->addOption('action-name', null, InputOption::VALUE_OPTIONAL, 'Custom Action class name');
     }
 }

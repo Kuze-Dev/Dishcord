@@ -22,7 +22,7 @@ class Recipe extends Model
         return $this->belongsTo(UserPost::class);
     }
 
-    public function ingridients():HasMany
+    public function ingredients():HasMany
     {
         return $this->hasMany(Ingredients::class);
     }

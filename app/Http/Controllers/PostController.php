@@ -46,6 +46,8 @@ class PostController extends Controller
             'image' => $request->image,
         ]);
 
+        
+
         $post = $user->userPosts()->get();
 
         return response()->json([
