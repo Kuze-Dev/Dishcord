@@ -12,7 +12,7 @@ use Domain\Recipe\DataTransferObjects\IngredientDTO;
 
 #[Prefix('api')]
 
-class IngridientController extends Controller
+class IngredientController extends Controller
 {
     // Only Update
 
