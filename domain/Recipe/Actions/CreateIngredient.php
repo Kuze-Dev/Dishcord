@@ -2,14 +2,14 @@
 
 namespace Domain\Recipe\Actions;
 
-use Domain\Recipe\DataTransferObjects\IngridientDTO;
-use Domain\Recipe\Models\Ingridients;
+use Domain\Recipe\DataTransferObjects\IngredientDTO;
+use Domain\Recipe\Models\Ingredients;
 
 class CreateIngridient
 {
-    public function create(IngridientDTO $dto): Ingridients
+    public function create(IngredientDTO $dto): Ingredients
     {
-        return Ingridients::create([
+        return Ingredients::create([
             'name' => $dto->name,
             'type' => $dto->type,
             'quantity' => $dto->quantity,

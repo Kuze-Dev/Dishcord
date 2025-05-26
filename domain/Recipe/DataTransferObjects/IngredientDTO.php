@@ -2,7 +2,7 @@
 
 namespace Domain\Recipe\DataTransferObjects;
 
-class IngridientDTO
+class IngredientDTO
 {
     public function __construct(
         public string $name,
