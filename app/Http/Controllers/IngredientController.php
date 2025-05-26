@@ -15,5 +15,4 @@ use Domain\Recipe\DataTransferObjects\IngredientDTO;
 class IngredientController extends Controller
 {
     // Only Update
-
 }
