@@ -2,17 +2,48 @@
 
 namespace Domain\Recipe\Actions;
 
-use Domain\Recipe\DataTransferObjects\RecipeDTO;
 use Domain\Recipe\Models\Recipe;
+use Domain\Recipe\Models\Ingredients;
+use Domain\Recipe\DataTransferObjects\RecipeDTO;
+use Domain\Recipe\DataTransferObjects\UpdateRecipeData;
 
 class UpdateRecipe
 {
-    public function handle(RecipeDTO $dto, int $id): Recipe
+    public function handle(UpdateRecipeData $data, Recipe $recipe): Recipe
     {
-        $model = Recipe::findOrFail($id);
-        $model->update([
-            
+        $recipe->update([
+            'name' => $data->name,
+            'instructions' => $data->instructions,
+            'slug' => $data->slug,
+        ]);
+
+        foreach ($data->ingredients as $ingredientData) {
+            if ($ingredientData->delete && $ingredientData->id) {
+                Ingredients::where('id', $ingredientData->id)
+                    ->where('recipe_id', $recipe->id)
+                    ->delete();
+                continue;
+            }
+
+            if ($ingredientData->id) {
+                Ingredients::where('id', $ingredientData->id)
+                    ->where('recipe_id', $recipe->id)
+                    ->update([
+                        'name' => $ingredientData->name,
+                        'type' => $ingredientData->type,
+                        'quantity' => $ingredientData->quantity,
+                        'unit' => $ingredientData->unit,
+                    ]);
+            } else {
+                $recipe->ingredients()->create([
+                    'name' => $ingredientData->name,
+                    'type' => $ingredientData->type,
+                    'quantity' => $ingredientData->quantity,
+                    'unit' => $ingredientData->unit,
                 ]);
-        return $model;
+            }
+        }
+
+        return $recipe->fresh('ingredients');
     }
 }

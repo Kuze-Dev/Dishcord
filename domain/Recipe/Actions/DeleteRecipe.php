@@ -9,8 +9,8 @@ class DeleteRecipe
 {
     public function handle(int $id): bool
     {
-        $model = Recipe::findOrFail($id);
-        $model->delete();
+        $recipe = Recipe::findOrFail($id);
+        $recipe->delete();
         return true;
     }
 }
