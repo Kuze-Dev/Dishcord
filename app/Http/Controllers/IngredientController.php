@@ -12,10 +12,10 @@ use Domain\Recipe\DataTransferObjects\IngredientDTO;
 
 #[Prefix('api')]
 
-class IngridientController extends Controller
+class IngredientController extends Controller
 {
     //
-    #[Post('ingridient', middleware:'auth:sanctum')]
+    #[Post('ingredient', middleware:'auth:sanctum')]
     public function store(Request $request, CreateIngredient $action)
     {
         $validated = Validator::make($request->all(), [

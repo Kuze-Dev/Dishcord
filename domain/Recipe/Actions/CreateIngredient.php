@@ -5,7 +5,7 @@ namespace Domain\Recipe\Actions;
 use Domain\Recipe\DataTransferObjects\IngredientDTO;
 use Domain\Recipe\Models\Ingredients;
 
-class CreateIngridient
+class CreateIngredient
 {
     public function create(IngredientDTO $dto): Ingredients
     {
