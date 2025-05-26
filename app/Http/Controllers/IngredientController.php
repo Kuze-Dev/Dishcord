@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Spatie\RouteAttributes\Attributes\Get;
 use Domain\Recipe\Actions\CreateIngredient;
 use Spatie\RouteAttributes\Attributes\Post;
 use Spatie\RouteAttributes\Attributes\Prefix;
@@ -51,6 +52,23 @@ class IngredientController extends Controller
             'ingridient' => $ingridient,
         ]);
     }
+
+    #[
+        Get('ingredient', middleware: 'auth:sanctum')
+    ]
+
+    public function getIngredients(){
+
+        $user = Auth::user();
+        $ingridients = $user->ingredients()->get();
+        return response()->json([
+            'success' => true,
+            'ingridients' => $ingridients,
+        ]);
+    }
+
+
+
 
 
 }
