@@ -2,6 +2,7 @@
 
 namespace Domain\Recipe\Models;
 
+use App\Models\UserPost;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -14,11 +15,10 @@ class Ingredients extends Model
         'type',
         'quantity',
         'unit',
-        'recipe_id',
     ];
 
     public function recipe():BelongsTo
     {
-        return $this->belongsTo(Recipe::class); 
+        return $this->belongsTo(Recipe::class);
     }
 }
