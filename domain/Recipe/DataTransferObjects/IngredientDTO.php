@@ -24,4 +24,14 @@ class IngredientDTO
             delete: $data['_delete'] ?? false,
         );
     }
+
+    public function toArray(): array
+    {
+        return [
+            'name'     => $this->name,
+            'type'     => $this->type,
+            'quantity' => $this->quantity,
+            'unit'     => $this->unit,
+        ];
+    }
 }

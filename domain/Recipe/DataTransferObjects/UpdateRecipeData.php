@@ -4,12 +4,11 @@ namespace Domain\Recipe\DataTransferObjects;
 
 class UpdateRecipeData
 {
-    /** @param IngredientData[] $ingredients */
     public function __construct(
         public string $name,
-        public string $instructions,
         public ?string $slug = null,
         public array $ingredients = [],
+        public array $instructions,
     ) {}
 
     public static function fromArray(array $data): self
@@ -20,9 +19,10 @@ class UpdateRecipeData
 
         return new self(
             name: $data['name'],
-            instructions: $data['instructions'],
             slug: $data['slug'] ?? null,
             ingredients: $ingredients,
+            instructions: $data['instructions'],
+
         );
     }
 }

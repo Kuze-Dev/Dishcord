@@ -2,6 +2,7 @@
 
 namespace Domain\Recipe\Actions;
 
+use App\Models\Instruction;
 use Domain\Recipe\Models\Recipe;
 use Domain\Recipe\Models\Ingredients;
 use Domain\Recipe\DataTransferObjects\RecipeDTO;
@@ -13,9 +14,12 @@ class UpdateRecipe
     {
         $recipe->update([
             'name' => $data->name,
-            'instructions' => $data->instructions,
             'slug' => $data->slug,
         ]);
+
+
+
+
 
         foreach ($data->ingredients as $ingredientData) {
             if ($ingredientData->delete && $ingredientData->id) {
@@ -44,6 +48,15 @@ class UpdateRecipe
             }
         }
 
-        return $recipe->fresh('ingredients');
+        // Update instructions
+        $recipe->instructions()->delete(); // OR smarter sync logic if needed
+        foreach ($data->instructions as $instructionData) {
+            $recipe->instructions()->create([
+                'step_number' => $instructionData['step_number'],
+                'step_description' => $instructionData['step_description'],
+            ]);
+        }
+
+        return $recipe->fresh(['ingredients','instructions']);
     }
 }
