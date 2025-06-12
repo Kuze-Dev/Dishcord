@@ -1,5 +1,5 @@
 <?php
-
+// RecipeController.php
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -22,9 +22,8 @@ use Domain\Recipe\DataTransferObjects\UpdateRecipeData;
 #[Prefix('api')]
 class RecipeController extends Controller
 {
-//Only update Recipe
-#[Delete('recipe/{id}', middleware:'auth:sanctum')]    
-    public function delete(int $id ,DeleteRecipe $action) {
+    #[Delete('recipe/{id}', middleware:'auth:sanctum')]
+    public function delete(int $id, DeleteRecipe $action) {
         if(!auth()->check()) {
             return response()->json([
                 'success' => false,
@@ -38,34 +37,38 @@ class RecipeController extends Controller
         ]);
     }
 
-#[Put('recipe/{id}', middleware:'auth:sanctum')]
+    #[Put('recipe/{id}', middleware:'auth:sanctum')]
     public function update(Request $request, int $id, UpdateRecipe $action)
-        {
-            $recipe = Recipe::findOrFail($id);
-            
-            $validated = $request->validate([
-                'name' => 'required|string',
-                'instructions' => 'required|string',
-                'slug' => 'nullable|string',
-                'ingredients' => 'nullable|array',
-                'ingredients.*.id' => [
-                    'sometimes',
-                    Rule::exists('ingredients', 'id')->where('recipe_id', $id),
-                ],
-                'ingredients.*.name' => 'nullable|string',
-                'ingredients.*.type' => 'nullable|string',
-                'ingredients.*.quantity' => 'nullable|string',
-                'ingredients.*.unit' => 'nullable|string',
-                'ingredients.*._delete' => 'sometimes|boolean',
-            ]);
+    {
+        $recipe = Recipe::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'instructions' => 'required|array', // Changed from string to array
+            'instructions.*.step_number' => 'required|integer',
+            'instructions.*.step_description' => 'required|string',
+            'slug' => 'nullable|string',
+            'ingredients' => 'nullable|array',
+            'ingredients.*.id' => [
+                'sometimes',
+                Rule::exists('ingredients', 'id')->where('recipe_id', $id),
+            ],
+            'ingredients.*.name' => 'nullable|string',
+            'ingredients.*.type' => 'nullable|string',
+            'ingredients.*.quantity' => 'nullable|string',
+            'ingredients.*.unit' => 'nullable|string',
+            'ingredients.*._delete' => 'sometimes|boolean',
+        ]);
+
+        $dto = UpdateRecipeData::fromArray($validated);
+
+        $updatedRecipe = $action->handle($dto, $recipe);
+
         
-            $dto = UpdateRecipeData::fromArray($validated);
-        
-            $updatedRecipe = $action->handle($dto, $recipe);
-        
-            return response()->json([
-                'success' => true,
-                'recipe' => $updatedRecipe,
-            ]);
+
+        return response()->json([
+            'success' => true,
+            'recipe' => $updatedRecipe,
+        ]);
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserPost;
+use App\Models\Instruction;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Domain\Recipe\Models\Recipe;
 use Illuminate\Support\Facades\DB;
@@ -15,28 +17,23 @@ use Spatie\RouteAttributes\Attributes\Delete;
 use Spatie\RouteAttributes\Attributes\Prefix;
 use Spatie\RouteAttributes\Attributes\Middleware;
 
-
 #[Prefix('api')]
 #[Middleware('auth:sanctum')]
 class PostController extends Controller
 {
-    //
-    #[
-        Post('post')
-    ]
-    
+    #[Post('post')]
     public function create(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required|string',
             'body' => 'required|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    
+
             // Recipe validation
             'recipe.name' => 'required|string',
             'recipe.instructions' => 'required|string',
             'recipe.slug' => 'nullable|string',
-    
+
             // Ingredients validation
             'recipe.ingredients' => 'nullable|array',
             'recipe.ingredients.*.name' => 'required|string',
@@ -44,43 +41,43 @@ class PostController extends Controller
             'recipe.ingredients.*.quantity' => 'required|string',
             'recipe.ingredients.*.unit' => 'required|string',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'errors' => $validator->errors()
             ], 422);
         }
-    
+
         DB::beginTransaction();
-    
+
         try {
             $user = Auth::user();
-    
+
             // Store the image if exists
             $imagePath = null;
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('post_images', 'public');
             }
-    
+
             // Create User Post
             $post = $user->userPosts()->create([
                 'title' => $request->title,
                 'body' => $request->body,
                 'image' => $imagePath,
             ]);
-    
+
             // Create Recipe linked to this post
             $recipeData = $request->input('recipe');
-    
+
             $recipe = new Recipe([
                 'name' => $recipeData['name'],
                 'instructions' => $recipeData['instructions'],
-                'slug' => $recipeData['slug'] ?? \Str::slug($recipeData['name']),
+                'slug' => $recipeData['slug'] ?? Str::slug($recipeData['name']),
             ]);
-    
-            $post->recipe()->save($recipe); // assuming one-to-one or one-to-many
-    
+
+            $post->recipe()->save($recipe);
+
             // Add ingredients if provided
             if (!empty($recipeData['ingredients'])) {
                 foreach ($recipeData['ingredients'] as $ingredientData) {
@@ -92,9 +89,9 @@ class PostController extends Controller
                     ]);
                 }
             }
-    
+
             DB::commit();
-    
+
             return response()->json([
                 'success' => true,
                 'message' => 'Post with recipe and ingredients created successfully.',
@@ -102,7 +99,7 @@ class PostController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
-    
+
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred.',
@@ -110,34 +107,28 @@ class PostController extends Controller
             ], 500);
         }
     }
-    
 
-    #[
-        Get('post')
-    ]
+    #[Get('post')]
     public function getPosts()
     {
-       $post = UserPost::all();
+        $post = UserPost::all();
 
         return response()->json([
             'success' => true,
-             'data' => $post
+            'data' => $post
         ]);
     }
 
-    #[
-        Put('post/{id}')
-    ]
+    #[Put('post/{id}')]
     public function updatePost(Request $request, $id)
     {
-        $validator = Validator::make($request->all(),[
-
+        $validator = Validator::make($request->all(), [
             'title' => 'required',
             'body' => 'required',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        if($validator->fails()){
+        if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'errors' => $validator->errors()
@@ -147,25 +138,30 @@ class PostController extends Controller
         $user = Auth::user();
         $post = $user->userPosts()->find($id);
 
-        $user->userPosts()->update([
-            'title' => $request->title,
-            'body' => $request->body,
-            'image' => $request->image,
-        ]);
+        if (!$post) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Post not found'
+            ], 404);
+        }
 
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('post_images', 'public');
+            $post->image = $imagePath;
+        }
+
+        $post->title = $request->title;
+        $post->body = $request->body;
+        $post->save();
 
         return response()->json([
             'success' => true,
-            'message' => 'Post Updated Succcessfully',
+            'message' => 'Post Updated Successfully',
             'post' => $post
         ]);
-
     }
 
-    #[
-        Delete('post/{id}')
-    ]
-
+    #[Delete('post/{id}')]
     public function deletePost($id)
     {
         $user = Auth::user();

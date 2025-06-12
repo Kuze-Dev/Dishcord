@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\UserInformation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +15,7 @@ use Spatie\RouteAttributes\Attributes\Prefix;
 class AuthenticationController extends Controller
 {
 
-    #[ 
+    #[
         Post('register')
     ]
     public function register(Request $request)
@@ -57,7 +56,7 @@ class AuthenticationController extends Controller
             'success' => true,
             'message' => 'User registered successfully'
         ]);
-        
+
     }
 
     #[
@@ -78,7 +77,7 @@ class AuthenticationController extends Controller
         }
 
         if (!Auth::attempt($request->only('email', 'password'))) {
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'User not found',
@@ -98,7 +97,7 @@ class AuthenticationController extends Controller
     }
 
 
-    #[ 
+    #[
         Get('logout', middleware: 'auth:sanctum')
     ]
     public function logout()
