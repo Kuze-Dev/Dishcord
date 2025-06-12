@@ -17,6 +17,8 @@ class UserPost extends Model implements HasMedia
     protected $fillable = [
         'user_id',
         'title',
+        '_reviewed',
+        '_published',
         'body',
     ];
 
