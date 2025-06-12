@@ -30,7 +30,9 @@ class PostController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             // Recipe validation
             'recipe.name' => 'required|string',
-            'recipe.instructions' => 'required|string',
+            'recipe.instructions' => 'required|array',
+            'recipe.instructions.*.step_description' => 'required|string',
+            'recipe.instructions.*.step_number' => 'required|integer',
             'recipe.slug' => 'nullable|string',
             // Ingredients validation
             'recipe.ingredients' => 'nullable|array',
@@ -70,13 +72,12 @@ class PostController extends Controller
     
             $recipe = new Recipe([
                 'name' => $recipeData['name'],
-                'instructions' => $recipeData['instructions'],
                 'slug' => $recipeData['slug'] ?? Str::slug($recipeData['name']),
             ]);
     
             $post->recipe()->save($recipe);
     
-            // Add ingredients if provided
+            // Create Ingredients
             if (!empty($recipeData['ingredients'])) {
                 foreach ($recipeData['ingredients'] as $ingredientData) {
                     $recipe->ingredients()->create([
@@ -84,6 +85,16 @@ class PostController extends Controller
                         'type' => $ingredientData['type'] ?? null,
                         'quantity' => $ingredientData['quantity'],
                         'unit' => $ingredientData['unit'],
+                    ]);
+                }
+            }
+    
+            // Create Instructions
+            if (!empty($recipeData['instructions'])) {
+                foreach ($recipeData['instructions'] as $instruction) {
+                    $recipe->instructions()->create([
+                        'step_description' => $instruction['step_description'],
+                        'step_number' => $instruction['step_number'],
                     ]);
                 }
             }
