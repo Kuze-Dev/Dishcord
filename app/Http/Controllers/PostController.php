@@ -173,7 +173,6 @@ class PostController extends Controller
                 'message' => 'Post not found'
             ], 404);
         }
-
         $post->delete();
 
         return response()->json([
