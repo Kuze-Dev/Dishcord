@@ -40,7 +40,7 @@ class PostController extends Controller
             'recipe.ingredients.*.quantity' => 'required|string',
             'recipe.ingredients.*.unit' => 'required|string',
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -49,33 +49,33 @@ class PostController extends Controller
         }
 
         DB::beginTransaction();
-    
+
         try {
             $user = Auth::user();
-    
-            // Store the image if exists
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('post_images', 'public');
-            }
-    
+
             // Create User Post
             $post = $user->userPosts()->create([
                 'title' => $request->title,
                 'body' => $request->body,
-                'image' => $imagePath,
             ]);
-    
+
+       // Handle media upload via MediaLibrary
+       if ($request->hasFile('image')) {
+        $post
+            ->addMediaFromRequest('image')
+            ->toMediaCollection('post_images');
+    }
+
             // Create Recipe linked to this post
             $recipeData = $request->input('recipe');
-    
+
             $recipe = new Recipe([
                 'name' => $recipeData['name'],
                 'slug' => $recipeData['slug'] ?? Str::slug($recipeData['name']),
             ]);
-    
+
             $post->recipes()->save($recipe);
-    
+
             // Create Ingredients
             if (!empty($recipeData['ingredients'])) {
                 foreach ($recipeData['ingredients'] as $ingredientData) {
@@ -87,7 +87,7 @@ class PostController extends Controller
                     ]);
                 }
             }
-    
+
             // Create Instructions
             if (!empty($recipeData['instructions'])) {
                 foreach ($recipeData['instructions'] as $instruction) {
@@ -97,9 +97,9 @@ class PostController extends Controller
                     ]);
                 }
             }
-    
+
             DB::commit();
-    
+
             return response()->json([
                 'success' => true,
                 'message' => 'Post with recipe and ingredients created successfully.',
@@ -108,7 +108,7 @@ class PostController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-    
+
             return response()->json([
                 'success' => false,
                 'message' => 'An error occurred.',
@@ -116,7 +116,7 @@ class PostController extends Controller
             ], 500);
         }
     }
-    
+
     #[Get('post')]
     public function getPosts()
     {
