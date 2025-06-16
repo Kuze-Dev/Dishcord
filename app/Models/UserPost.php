@@ -7,9 +7,10 @@ use Domain\Recipe\Models\Recipe;
 use Spatie\MediaLibrary\HasMedia;
 use Domain\Recipe\Models\Ingredients;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Spatie\MediaLibrary\InteractsWithMedia;
 
 class UserPost extends Model implements HasMedia
 {
@@ -26,9 +27,9 @@ class UserPost extends Model implements HasMedia
     {
         return $this->belongsTo(User::class);
     }
-    public function recipes() :HasMany
+    public function recipes() :HasOne
     {
-        return $this->hasMany(Recipe::class);
+        return $this->hasOne(Recipe::class);
     }
 
     public function getImageUrlAttribute()

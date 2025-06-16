@@ -30,7 +30,6 @@ class PostController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             // Recipe validation
             'recipe.name' => 'required|string',
-            'recipe.instructions' => 'required|array',
             'recipe.instructions.*.step_description' => 'required|string',
             'recipe.instructions.*.step_number' => 'required|integer',
             'recipe.slug' => 'nullable|string',
@@ -75,7 +74,7 @@ class PostController extends Controller
                 'slug' => $recipeData['slug'] ?? Str::slug($recipeData['name']),
             ]);
     
-            $post->recipe()->save($recipe);
+            $post->recipes()->save($recipe);
     
             // Create Ingredients
             if (!empty($recipeData['ingredients'])) {
@@ -104,8 +103,9 @@ class PostController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Post with recipe and ingredients created successfully.',
-                'post' => $post->load('recipe.ingredients'),
+                'post' => $post->load('recipes.ingredients', 'recipes.instructions'),
             ]);
+
         } catch (\Exception $e) {
             DB::rollBack();
     
@@ -124,7 +124,7 @@ class PostController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $post
+            'data' => $post,
         ]);
     }
 
