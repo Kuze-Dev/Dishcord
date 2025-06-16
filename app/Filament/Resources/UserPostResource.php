@@ -28,7 +28,7 @@ class UserPostResource extends Resource
 {
     protected static ?string $model = UserPost::class;
 
-    protected static ?string $navigationLabel = 'Review Post';
+    protected static ?string $pluralModelLabel = 'Review Posts';
 
     protected static ?string $navigationIcon = 'heroicon-o-check-badge';
 
@@ -145,7 +145,6 @@ class UserPostResource extends Resource
     {
         return [
             'index' => Pages\ListUserPosts::route('/'),
-            'create' => Pages\CreateUserPost::route('/create'),
             'edit' => Pages\EditUserPost::route('/{record}/edit'),
         ];
     }

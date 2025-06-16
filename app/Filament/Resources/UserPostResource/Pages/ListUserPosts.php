@@ -2,9 +2,10 @@
 
 namespace App\Filament\Resources\UserPostResource\Pages;
 
-use App\Filament\Resources\UserPostResource;
 use Filament\Actions;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\UserPostResource;
 
 class ListUserPosts extends ListRecords
 {
@@ -13,7 +14,8 @@ class ListUserPosts extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            Actions\CreateAction::make(),
+            //
         ];
     }
+ 
 }
