@@ -66,7 +66,7 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 php artisan make:domain-model Ingredients --domain=Ingredients
 
-it create a Igridients model insidel Domain/Ingredients/Models/Ingredients.php
+it create a Igredients model inside Domain/Ingredients/Models/Ingredients.php
 
 if you want to create migration along with the command just put --migration
 
