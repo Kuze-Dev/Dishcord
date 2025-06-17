@@ -6,10 +6,12 @@ use App\Models\User;
 use Domain\Recipe\Models\Recipe;
 use Spatie\MediaLibrary\HasMedia;
 // use Domain\Recipe\Models\Ingredients;
+use Domain\Comments\Models\Comment;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 // use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -36,9 +38,14 @@ class UserPost extends Model implements HasMedia
     }
 
     public function getImageUrlAttribute()
-{
+    {
     return $this->getFirstMediaUrl('post_images');
-}
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class, 'user_post_id');
+    }
 
 public function registerMediaCollections(): void
 {
