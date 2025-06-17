@@ -64,9 +64,9 @@ The Laravel framework is open-sourced software licensed under the [MIT license](
 
 ## Generate domain pattern using this command 
 
-php artisan make:domain-model Ingridients --domain=Ingridients
+php artisan make:domain-model Ingredients --domain=Ingredients
 
-it creade a Igridients model insidel Domain/Ingridients/Models/Ingridients.php
+it creade a Igridients model insidel Domain/Ingredients/Models/Ingredients.php
 
 if you want to create migration along with the command just put --migration
 
@@ -78,17 +78,17 @@ if you wabt to create also with controller --controller
 
 ## Create domain Action 
 
-php artisan make:domain-action --model=Ingridients --domain=Ingridients --action=create
+php artisan make:domain-action --model=Ingredients --domain=Ingredients --action=create
 
-php artisan make:domain-action --model=Ingridients --domain=Ingridients --action=update
+php artisan make:domain-action --model=Ingredients --domain=Ingredients --action=update
 
-php artisan make:domain-action --model=Ingridients --domain=Ingridients --action=delete
+php artisan make:domain-action --model=Ingredients --domain=Ingredients --action=delete
 
-php artisan make:domain-action --model=Ingridients --domain=Ingridients --action=all 
+php artisan make:domain-action --model=Ingredients --domain=Ingredients --action=all 
 
 --action=all create all type of action
 
 ## Create domain-addon 
 Create a dto or action in a existed model or domain just run 
 
-php artisan make:domain-addon --model=Ingridients --domain=Ingridients --dto --action
+php artisan make:domain-addon --model=Ingredients --domain=Ingredients --dto --action
