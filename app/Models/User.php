@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Models\UserPost;
 use App\Models\UserInformation;
 use Laravel\Sanctum\HasApiTokens;
+use Domain\Comments\Models\Comment;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -60,5 +61,10 @@ class User extends Authenticatable
     public function userPosts():HasMany
     {
         return $this->hasMany(UserPost::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 }

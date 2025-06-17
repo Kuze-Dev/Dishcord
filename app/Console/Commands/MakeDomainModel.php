@@ -111,22 +111,23 @@ PHP;
         }
 
         // Create Controller
-    if ($this->option('controller')) {
-        $controllerPath = base_path("domain/{$domain}/Controllers");
-        $controllerFile = "{$controllerPath}/{$modelName}Controller.php";
-        $controllerNamespace = "Domain\\{$domain}\\Controllers";
+   // Create Controller
+if ($this->option('controller')) {
+    $controllerPath = app_path("Http/Controllers");
+    $controllerFile = "{$controllerPath}/{$modelName}Controller.php";
+    $controllerNamespace = "App\\Http\\Controllers";
 
-        if (!File::isDirectory($controllerPath)) {
-            File::makeDirectory($controllerPath, 0755, true);
-        }
+    if (!File::isDirectory($controllerPath)) {
+        File::makeDirectory($controllerPath, 0755, true);
+    }
 
-        $controllerContent = <<<PHP
+    $controllerContent = <<<PHP
 <?php
 
-    namespace {$controllerNamespace};
+namespace {$controllerNamespace};
 
-    use Illuminate\Http\Request;
-    use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class {$modelName}Controller extends Controller
 {
@@ -153,9 +154,10 @@ class {$modelName}Controller extends Controller
 }
 PHP;
 
-        File::put($controllerFile, $controllerContent);
-        $this->info("✅ Controller created at: {$controllerFile}");
-    }
+    File::put($controllerFile, $controllerContent);
+    $this->info("✅ Controller created at: {$controllerFile}");
+}
+
 
         return static::SUCCESS;
     }
@@ -169,6 +171,6 @@ PHP;
             ->addOption('dto', null, InputOption::VALUE_NONE, 'Create DTO')
             ->addOption('action', null, InputOption::VALUE_NONE, 'Create Action')
             ->addOption('controller', null, InputOption::VALUE_NONE, 'Create Controller');
-            
+
     }
 }
