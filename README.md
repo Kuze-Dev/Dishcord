@@ -71,6 +71,7 @@ it creade a Igridients model insidel Domain/Ingridients/Models/Ingridients.php
 if you want to create migration along with the command just put --migration
 if you want to create DataTransferObjects just put --dto
 if you want also to create action just put --action
+
 if you wabt to create also with controller --controller
 
 ## Create domain Action 
