@@ -23,7 +23,8 @@ class MakeDomainAddon extends Command
 
         // -- DTO Creation --
         if ($this->option('dto')) {
-            $dtoName = Str::studly($this->option('dto-name') ?? "{$modelName}DTO");
+            // Use the dto option value directly, or fall back to dto-name, or default
+            $dtoName = Str::studly($this->option('dto') !== true ? $this->option('dto') : ($this->option('dto-name') ?? "{$modelName}DTO"));
             $dtoPath = base_path("domain/{$domain}/DataTransferObjects");
             $dtoFile = "{$dtoPath}/{$dtoName}.php";
             $dtoNamespace = "Domain\\{$domain}\\DataTransferObjects";
@@ -51,8 +52,8 @@ PHP;
 
         // -- Action Creation --
         if ($this->option('action')) {
-            $defaultActionName = "Create{$modelName}";
-            $actionName = Str::studly($this->option('action-name') ?? $defaultActionName);
+            // Use the action option value directly, or fall back to action-name, or default
+            $actionName = Str::studly($this->option('action') !== true ? $this->option('action') : ($this->option('action-name') ?? "Create{$modelName}"));
             $actionPath = base_path("domain/{$domain}/Actions");
             $actionFile = "{$actionPath}/{$actionName}.php";
             $actionNamespace = "Domain\\{$domain}\\Actions";
@@ -61,7 +62,8 @@ PHP;
                 File::makeDirectory($actionPath, 0755, true);
             }
 
-            $dtoName = Str::studly($this->option('dto-name') ?? "{$modelName}DTO");
+            // Use the DTO name from the dto option or fallback
+            $dtoName = Str::studly($this->option('dto') && $this->option('dto') !== true ? $this->option('dto') : ($this->option('dto-name') ?? "{$modelName}DTO"));
 
             $actionContent = <<<PHP
 <?php
@@ -94,9 +96,9 @@ PHP;
         $this
             ->addOption('model', null, InputOption::VALUE_REQUIRED, 'The model name')
             ->addOption('domain', null, InputOption::VALUE_REQUIRED, 'The domain name (e.g., Ingredients)')
-            ->addOption('dto', null, InputOption::VALUE_NONE, 'Create DTO')
-            ->addOption('dto-name', null, InputOption::VALUE_OPTIONAL, 'Custom DTO class name')
-            ->addOption('action', null, InputOption::VALUE_NONE, 'Create Action')
-            ->addOption('action-name', null, InputOption::VALUE_OPTIONAL, 'Custom Action class name');
+            ->addOption('dto', null, InputOption::VALUE_OPTIONAL, 'Create DTO with optional custom name')
+            ->addOption('dto-name', null, InputOption::VALUE_OPTIONAL, 'Custom DTO class name (deprecated, use --dto instead)')
+            ->addOption('action', null, InputOption::VALUE_OPTIONAL, 'Create Action with optional custom name')
+            ->addOption('action-name', null, InputOption::VALUE_OPTIONAL, 'Custom Action class name (deprecated, use --action instead)');
     }
 }
