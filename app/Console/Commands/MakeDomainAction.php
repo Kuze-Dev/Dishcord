@@ -107,3 +107,4 @@ PHP;
             ->addOption('action', null, InputOption::VALUE_REQUIRED, 'Action type: create, update, delete, or all');
     }
 }
+ 
